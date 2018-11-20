@@ -1,0 +1,38 @@
+#!/bin/bash
+
+echo
+echo "--------------------------"
+echo "ifconfig"
+ifconfig
+
+echo
+echo "--------------------------"
+echo "netstat"
+netstat -rn
+
+echo
+echo "--------------------------"
+echo "arp -a"
+arp -a
+
+echo
+echo "--------------------------"
+echo "Pinging Comcast router"
+ping -c 10 10.0.1.1
+
+echo
+echo "--------------------------"
+echo "Pinging Google Wifi router"
+ping -c 10 192.168.86.1
+
+echo
+echo "--------------------------"
+echo "Pinging printer"
+ping -c 10 192.168.86.135
+
+echo
+echo "--------------------------"
+echo "Running speedtest"
+curl -o /dev/null http://speedtest.wdc01.softlayer.com/downloads/test100.zip
+
+
