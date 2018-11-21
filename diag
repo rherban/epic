@@ -21,9 +21,9 @@ self_update() {
 	then
 		echo "Updating to new version!"
 		cp --remove-destination $SCRIPTNAME.tmp $SCRIPTNAME
-        exec "$SCRIPTNAME" "$@"
-        # Now exit this old instance
-        exit 1
+		exec "$SCRIPTNAME" "$@"
+		# Now exit this old instance
+		exit 1
 	else
 		echo "Not updating, $NEWLENGTH < $OLDLENGTH"
 	fi
