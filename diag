@@ -1,38 +1,72 @@
 #!/bin/bash
+# Self-updating script to query several network devices
+# Written by Randy Herban
+# updating piece inspired by https://stackoverflow.com/questions/35365799/shell-script-self-update-using-git/35365800
 
-echo
-echo "--------------------------"
-echo "ifconfig"
-ifconfig
+SCRIPTNAME="$0"
+ARGS="$@"
+URL="https://raw.githubusercontent.com/rherban/epic/master/diag"
+FORCE=false
 
-echo
-echo "--------------------------"
-echo "netstat"
-netstat -rn
+if [ "$1" == "-f" ]; then
+	FORCE=true
+fi
 
-echo
-echo "--------------------------"
-echo "arp -a"
-arp -a
+self_update() {
+    curl -s ${URL} > $SCRIPTNAME.tmp
 
-echo
-echo "--------------------------"
-echo "Pinging Comcast router"
-ping -c 10 10.0.1.1
+	OLDLENGTH=$(( $(wc -c < $SCRIPTNAME) - 10))
+	NEWLENGTH=$(wc -c < $SCRIPTNAME.tmp)
+	if [ $NEWLENGTH -gt $OLDLENGTH ] || [ "$FORCE" = true ];
+	then
+		echo "Updating to new version!"
+		cp --remove-destination $SCRIPTNAME.tmp $SCRIPTNAME
+        exec "$SCRIPTNAME" "$@"
+        # Now exit this old instance
+        exit 1
+	else
+		echo "Not updating, $NEWLENGTH < $OLDLENGTH"
+	fi
+}
 
-echo
-echo "--------------------------"
-echo "Pinging Google Wifi router"
-ping -c 10 192.168.86.1
+main() {
+	echo
+	echo "--------------------------"
+	echo "ifconfig"
+	ifconfig
 
-echo
-echo "--------------------------"
-echo "Pinging printer"
-ping -c 10 192.168.86.135
+	echo
+	echo "--------------------------"
+	echo "netstat"
+	netstat -rn
 
-echo
-echo "--------------------------"
-echo "Running speedtest"
-curl -o /dev/null http://speedtest.wdc01.softlayer.com/downloads/test100.zip
+	echo
+	echo "--------------------------"
+	echo "arp -a"
+	arp -a
+
+	echo
+	echo "--------------------------"
+	echo "Pinging Comcast router"
+	ping -c 10 10.0.1.1
+
+	echo
+	echo "--------------------------"
+	echo "Pinging Google Wifi router"
+	ping -c 10 192.168.86.1
+
+	echo
+	echo "--------------------------"
+	echo "Pinging printer"
+	ping -c 10 192.168.86.135
+
+	echo
+	echo "--------------------------"
+	echo "Running speedtest"
+	curl -o /dev/null http://speedtest.wdc01.softlayer.com/downloads/test100.zip
 
 
+}
+
+self_update
+main
