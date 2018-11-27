@@ -7,6 +7,7 @@ SCRIPTNAME="$0"
 ARGS="$@"
 URL="https://raw.githubusercontent.com/rherban/epic/master/diag"
 FORCE=false
+NOUPDATE=false
 #Parse the dropbox dir from the config
 DROPBOX=$(grep -Eo '"path":.*?[^\\]",' ~/.dropbox/info.json | awk -F\" '{print $4}')
 DATE=$(date +"%Y%m%d-%H%M%S")
@@ -15,6 +16,10 @@ LOGFILE="$DROPBOX/Technical/$HOSTNAME-$DATE.txt"
 
 if [ "$1" == "-f" ]; then
 	FORCE=true
+fi
+
+if [ "$1" == "-n" ]; then
+	NOUPDATE=true
 fi
 
 #Redirect all output and error to $LOGFILE
@@ -27,11 +32,11 @@ self_update() {
 
 	OLDLENGTH=$(( $(wc -c < $SCRIPTNAME) - 10))
 	NEWLENGTH=$(wc -c < $SCRIPTNAME.tmp)
-	if [ $NEWLENGTH -gt $OLDLENGTH ] || [ "$FORCE" = true ];
+	if [ $NEWLENGTH -ge $OLDLENGTH ] || [ "$FORCE" = true ];
 	then
 		echo "Updating to new version!"
 		install $SCRIPTNAME.tmp $SCRIPTNAME
-		exec "$SCRIPTNAME" "$@"
+		exec "$SCRIPTNAME" "-n"
 		# Now exit this old instance
 		exit 1
 	else
@@ -83,5 +88,9 @@ main() {
 
 }
 
-self_update
+if [ "$NOUPDATE" = false ];
+then
+	self_update
+fi
+
 main
