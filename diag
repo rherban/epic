@@ -7,10 +7,22 @@ SCRIPTNAME="$0"
 ARGS="$@"
 URL="https://raw.githubusercontent.com/rherban/epic/master/diag"
 FORCE=false
+#Parse the dropbox dir from the config
+DROPBOX=$(grep -Eo '"path":.*?[^\\]",' ~/.dropbox/info.json | awk -F\" '{print $4}')
+DATE=$(date +"%Y%m%d-%H%M%S")
+HOSTNAME=$(hostname)
+LOGFILE="$DROPBOX/Technical/$HOSTNAME-$DATE.txt"
+
+echo "Writing output to ${LOGFILE}"
 
 if [ "$1" == "-f" ]; then
 	FORCE=true
 fi
+
+#Redirect all output and error to $LOGFILE
+touch ${LOGFILE}
+exec 1>${LOGFILE}
+exec 2>&1
 
 self_update() {
     curl -s ${URL} > $SCRIPTNAME.tmp
@@ -27,6 +39,10 @@ self_update() {
 	else
 		echo "Not updating, $NEWLENGTH < $OLDLENGTH"
 	fi
+}
+
+get_dropbox_dir() {
+	echo $(grep -Eo '"path":.*?[^\\]",' ~/.dropbox/info.json | awk -F\" '{print \$4}')
 }
 
 main() {
@@ -48,17 +64,22 @@ main() {
 	echo
 	echo "--------------------------"
 	echo "Pinging Comcast router"
-	ping -c 10 10.0.1.1
+	ping -c 5 10.0.1.1
 
 	echo
 	echo "--------------------------"
 	echo "Pinging Google Wifi router"
-	ping -c 10 192.168.86.1
+	ping -c 5 192.168.86.1
 
 	echo
 	echo "--------------------------"
 	echo "Pinging printer"
-	ping -c 10 192.168.86.135
+	ping -c 5 192.168.86.135
+
+	echo
+	echo "--------------------------"
+	echo "Traceroute google.com"
+	traceroute -S google.com
 
 	echo
 	echo "--------------------------"
