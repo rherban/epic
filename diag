@@ -23,7 +23,7 @@ touch ${LOGFILE}
 exec &> >(tee -a "${LOGFILE}")
 
 self_update() {
-    curl -s ${URL} > $SCRIPTNAME.tmp
+    curl -s -S ${URL} > $SCRIPTNAME.tmp
 
 	OLDLENGTH=$(( $(wc -c < $SCRIPTNAME) - 10))
 	NEWLENGTH=$(wc -c < $SCRIPTNAME.tmp)
