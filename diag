@@ -13,16 +13,14 @@ DATE=$(date +"%Y%m%d-%H%M%S")
 HOSTNAME=$(hostname)
 LOGFILE="$DROPBOX/Technical/$HOSTNAME-$DATE.txt"
 
-echo "Writing output to ${LOGFILE}"
-
 if [ "$1" == "-f" ]; then
 	FORCE=true
 fi
 
 #Redirect all output and error to $LOGFILE
+echo "Writing output to ${LOGFILE}"
 touch ${LOGFILE}
-exec 1>${LOGFILE}
-exec 2>&1
+exec &> >(tee -a "${LOGFILE}")
 
 self_update() {
     curl -s ${URL} > $SCRIPTNAME.tmp
