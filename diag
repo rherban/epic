@@ -30,17 +30,13 @@ self_update() {
 	if [ $NEWLENGTH -gt $OLDLENGTH ] || [ "$FORCE" = true ];
 	then
 		echo "Updating to new version!"
-		cp --remove-destination $SCRIPTNAME.tmp $SCRIPTNAME
+		install $SCRIPTNAME.tmp $SCRIPTNAME
 		exec "$SCRIPTNAME" "$@"
 		# Now exit this old instance
 		exit 1
 	else
 		echo "Not updating, $NEWLENGTH < $OLDLENGTH"
 	fi
-}
-
-get_dropbox_dir() {
-	echo $(grep -Eo '"path":.*?[^\\]",' ~/.dropbox/info.json | awk -F\" '{print \$4}')
 }
 
 main() {
