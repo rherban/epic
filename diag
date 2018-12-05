@@ -37,6 +37,7 @@ self_update() {
 		echo "Updating to new version!"
 		install $SCRIPTNAME.tmp $SCRIPTNAME
 		exec "$SCRIPTNAME" "-n"
+		rm $SCRIPTNAME.tmp
 		# Now exit this old instance
 		exit 1
 	else
@@ -79,6 +80,11 @@ main() {
 	echo "--------------------------"
 	echo "Traceroute google.com"
 	traceroute -S google.com
+
+	echo
+	echo "--------------------------"
+	echo "Traceroute 8.8.8.8"
+	traceroute -S 8.8.8.8
 
 	echo
 	echo "--------------------------"
