@@ -64,17 +64,17 @@ main() {
 	echo
 	echo "--------------------------"
 	echo "Pinging Comcast router"
-	ping -c 5 10.0.1.1
+	ping -c 5 10.1.10.1
 
 	echo
 	echo "--------------------------"
-	echo "Pinging Google Wifi router"
-	ping -c 5 192.168.86.1
+	echo "Pinging main office printer"
+	ping -c 5 10.1.10.244
 
 	echo
 	echo "--------------------------"
-	echo "Pinging printer"
-	ping -c 5 192.168.86.135
+	echo "Pinging volunteer office printer"
+	ping -c 5 10.1.10.245
 
 	echo
 	echo "--------------------------"
