@@ -8,7 +8,7 @@ from datetime import datetime
 DATE=str(datetime.now().month) + "-" + str(datetime.now().day) + "-" + str(datetime.now().strftime('%y'))
 MONTHYEAR=str(datetime.now().strftime('%B')) + " " + str(datetime.now().year)
 
-volumes_to_check = {"/Volumes/ROLAND": "M-400/SONGS",
+volumes_to_check = {"/Volumes/ROLAND": "RSS/M-400/SONGS",
                     "/Volumes/Kingston": "RSS",
                     "/Volumes/H2SD":"FOLDER01"
                     }
@@ -38,11 +38,17 @@ class audio_file:
         self.ext = os.path.splitext(file)[1]
         self.new_filename = ""
         self.copied = False
-        #sys.stdout.write(self.file + " - " + os.path.splitext(file)[0][-1:] + " ")
+        #sys.stdout.write(self.filename + " - " + os.path.splitext(file)[0][-1:] + " ")
         if int(os.path.splitext(file)[0][-1:]) == 0:
             self.service = 'a'
         elif int(os.path.splitext(file)[0][-1]) == 1:
             self.service = 'b'
+        elif int(os.path.splitext(file)[0][-1]) == 2:
+            self.service = 'c'
+        elif int(os.path.splitext(file)[0][-1]) == 3:
+            self.service = 'd'
+        elif int(os.path.splitext(file)[0][-1]) == 4:
+            self.service = 'e'
         else:
             self.service = '-1'
         #sys.stdout.write(str(self.service) + "\n")
@@ -159,7 +165,7 @@ def main():
     for i in audio_files:
         if not(os.path.isfile(os.path.join(DEST, i.new_filename))):
             print(i.filename + " ==> " + os.path.join(DEST, i.new_filename))
-            shutil.copy2(i.filename, os.path.join(DEST, i.new_filename))
+            shutil.copy(i.filename, os.path.join(DEST, i.new_filename))
             i.copied = True
         else:
             print("Skipping " + i.filename)
@@ -181,9 +187,9 @@ def main():
             print(str(md5sum2).rstrip() + " " + os.path.join(DEST, i.new_filename))
 
 
-         call(["ls","-las",i.filename])
-         call(["ls","-las",os.path.join(DEST, i.new_filename)])
-         print
+	call(["ls","-las",i.filename])
+	call(["ls","-las",os.path.join(DEST, i.new_filename)])
+	print
     print("Done")
 
 
